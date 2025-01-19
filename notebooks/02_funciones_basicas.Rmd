@@ -91,7 +91,7 @@ library(quantmod)
 
 Si quisieramos obtener los datos de una empresa solo haríamos:
 ```{r}
-start <- as.Date('2020-01-01')
+start <- as.Date('2024-12-01')
 TSLA <- getSymbols('TSLA', src='yahoo', from=start, auto.assign = F)
 head(TSLA)
 ```
@@ -101,7 +101,7 @@ head(TSLA)
 Queremos crear una función que, dada una lista de empresas nos calcule cual es la que mejor rendimiento ha obtenido:
 
 ```{r}
-FAANGTesla <- c('FB','AMZN','AAPL', 'NFLX', 'GOOG', 'TSLA')
+FAANGTesla <- c('AMZN','AAPL', 'NFLX', 'GOOG', 'TSLA')
 ```
 
 La empresa que mejor rendimiento ha obtenido desde el 1 enero de 2021 hasta hoy es:
@@ -146,7 +146,7 @@ paste("La empresa que mejor rendimiento obtuvo desde 2021-01-01 fue",ret[["ticke
 
 Igual que en otros lenguajes de programación podemos crear bucles con la función while:
 ```{r}
-set.seed(4021)
+set.seed(4021300)
 val <- 1
 while(val<5){
   val <- runif(1, min=0, max=10)
