@@ -17,33 +17,31 @@ Gplot2 es un sistema para crear gráficos de forma declarativa.
 
 
 ```{r}
-url_oktoberfest<-"https://www.opengov-muenchen.de/dataset/8d6c8251-7956-4f92-8c96-f79106aab828/resource/e0f664cf-6dd9-4743-bd2b-81a8b18bd1d2/download/oktoberfestgesamt19852019.csv"
-df_oktoberfest<-read.csv(url_oktoberfest)
+# Recplicado el data set en E:\proyects\RPersonalNotebooks\material_adicional\datasets\oktoberfestbierkonsum19852023.csv
+url_oktoberfest<-"https://opendata.muenchen.de/dataset/8d6c8251-7956-4f92-8c96-f79106aab828/resource/56a0c3c8-c2ea-4b42-bbd2-21cb72d80803/download/oktoberfestbierkonsum19852023.csv"  
+df_oktoberfest<-read.csv(url_oktoberfest)  
 str(df_oktoberfest)
 ```
-El conjunto de datos del Oktoberfest incluye actualmente las cifras anuales sobre la duración del Oktoberfest, el número total de visitantes, el número de visitantes diarios, los precios de la cerveza, el consumo de cerveza, los precios del pollo asado, el consumo de pollo asado.
+El conjunto de datos del Oktoberfest incluye actualmente las cifras anuales sobre la duración del Oktoberfest, el número total de visitantes, el número de visitantes diarios, el consumo de cerveza.
 
 * año
 * duración
 * visitantes_total (en millones)
-* visitante_etiqueta (en 1000)
-* precio_cerveza (1 litro)
+* visitante_día (en 1000)
 * beer_consumption (en hectolitros)
-* pollo_preis
-* consumo_pollo
 
 
 ```{r}
-colnames(df_oktoberfest)<-c('año','duracion','visitantes.total','visitantes.tag','precio.cerveza','consumo.cerveza','precio.pollo','consumo.pollo')
+colnames(df_oktoberfest)<-c('año','duracion','visitantes.total','visitantes.dia','consumo.cerveza')
 summary(df_oktoberfest)
 ```
 
 Vamos a pintar el precio de la cerveza en función de año utilizando la librería ggplot:
 ```{r}
 library(ggplot2)
-ggplot(df_oktoberfest, aes(x=año,y=precio.cerveza))+geom_line(color='blue')+
+ggplot(df_oktoberfest, aes(x=año,y=visitantes.total))+geom_line(color='blue')+
    geom_point(color='#FF99AA')+
-   xlab("Año")+ylab("Precio €")+ggtitle("Precio de la cerveza en el oktoberfest")+
+   xlab("Año")+ylab("Visitantes")+ggtitle("Visitantes en el oktoberfest")+
    theme_bw()
 
 ```
@@ -161,12 +159,14 @@ Los datos vienen de dos fuentes:
 Vamos a descargarnos el primer reporte de felicidad (World Happiness Report ,SWB):
 
 ```{r}
-library(readxl)
-library(RCurl)
-url_whr<-'https://happiness-report.s3.amazonaws.com/2020/WHR20_DataForFigure2.1.xls'
-filename_whr <- '/tmp/WHR.xls'
-download.file(url_whr,filename_whr)
-df_whr <- read_excel(filename_whr)
+# El archivo baja corupto, lo he salvado aparte y convertido a csv
+#library(readxl)
+#library(RCurl)
+#url_whr<-'https://happiness-report.s3.amazonaws.com/2020/WHR20_DataForFigure2.1.xls'
+#filename_whr <- 'E:/proyects/RPersonalNotebooks/material_adicional/datasets/WHR.xls'
+#download.file(url_whr,filename_whr)
+#df_whr <- read_excel(filename_whr)
+df_whr <- read.csv('E:/proyects/RPersonalNotebooks/material_adicional/datasets/WHR20_DataForFigure2.1.csv')
 df_whr <- df_whr[,1:3]
 colnames(df_whr)<-c("pais","region","SWB")
 df_whr$region <- factor(df_whr$region)
@@ -193,7 +193,7 @@ Ahora intentaremos verlo por región:
 ggplot(df_whr,aes(y=SWB, color=region,x=region))+geom_boxplot()+
     ggtitle("Bienestar subjetivo")+
     theme(axis.text.x = element_text(angle = 45, hjust=1), legend.position = 'None',
-          plot.margin = margin(t = 0, r = 0, b = 0, l = 50, unit = "pt"))
+          plot.margin = margin(t = 0, r = 10, b = 0, l = 35, unit = "pt"))
 ```
 
 Estos valores agrupados, junto con la media los podríamos obtener con ayuda de la librería dplyr:
@@ -247,9 +247,15 @@ ggplot(df_whr,aes(x=SWB))+geom_density(bw=0.2, kernel='gaussian')+
 
 Vamos a descargarnos los datos de Sustainable Development (SDG) score:
 ```{r}
-url_glir<-'https://raw.githubusercontent.com/sdsna/2019GlobalIndex/master/2019GlobalIndexResults.xlsx'
-filename_glir <- '/tmp/GlobalIndex.xlsx'
-download.file(url_glir,filename_glir)
+# por download falla con el siguiente mensaje:
+# Error en utils::unzip(zip_path, list = TRUE): 
+#  error -103 with zipfile in unzGetCurrentFileInfo
+# por lo que lo he descargado y guardado en local
+#
+# library(readxl)
+#url_glir<-'https://raw.githubusercontent.com/sdsna/2019GlobalIndex/master/2019GlobalIndexResults.xlsx'
+filename_glir <- 'E:/proyects/RPersonalNotebooks/material_adicional/datasets/2019GlobalIndexResults.xlsx'
+#download.file(url_glir,filename_glir)
 df_glir <- read_excel(filename_glir,sheet=4,skip = 1)
 df_glir <- df_glir[,c("Country","id","2019 Global Index Score (0-100)","Population in 2019","GDP per capita, PPP in 2017")]
 colnames(df_glir)<-c("pais","pais.id","SDG.index","population","gdp_per_capita")
@@ -297,8 +303,8 @@ ggplot(df_total,aes(x=SDG.index,y=SWB,color=continente))+
 
 Vamos a añadir los nombres de diferentes paises:
 ```{r}
-paises<-c('Spain','Colombia','Denmark','Nigeria','Germany','Haiti','Ukraine')
-df_total[df_total$pais.glir %in% paises, c('pais.glir','SDG.index','SWB')]
+paises<-c('Spain','Denmark','Nigeria','Germany','Haiti','Ukraine','Mexico','United States','China','India','Japan','Australia','Canada','Argentina')
+df_total[df_total$pais.glir %in% paises, c('pais.glir','pais.whr','SDG.index','SWB')]
 ```
 
 ```{r}
