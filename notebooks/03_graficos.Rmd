@@ -252,7 +252,7 @@ Vamos a descargarnos los datos de Sustainable Development (SDG) score:
 #  error -103 with zipfile in unzGetCurrentFileInfo
 # por lo que lo he descargado y guardado en local
 #
-# library(readxl)
+library(readxl)
 #url_glir<-'https://raw.githubusercontent.com/sdsna/2019GlobalIndex/master/2019GlobalIndexResults.xlsx'
 filename_glir <- 'E:/proyects/RPersonalNotebooks/material_adicional/datasets/2019GlobalIndexResults.xlsx'
 #download.file(url_glir,filename_glir)
@@ -389,6 +389,7 @@ fig
 
 Intentamos repetir la gráfica de antes:
 ```{r}
+library(plotly)
 fig <- plot_ly(df_total, x=~SDG.index, y = ~SWB, color = ~continente, size=~gdp_per_capita, text=~paste(pais.glir,bandera), type = "scatter")
 fig %>% layout(title='Comparación SDG y SWB',
                xaxis=list(title='Indice de desarrollo global sostenible (0-100)'),
