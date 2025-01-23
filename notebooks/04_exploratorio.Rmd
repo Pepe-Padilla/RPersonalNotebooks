@@ -81,6 +81,7 @@ Hay muchas columnas que tienen un valor "" cuando realmente debería ser NA, vam
 comics <- comics %>% 
            mutate(across(.cols=everything(),~replace(., .=="", NA))) %>% 
            mutate(across(one_of(colnames(comics)[sapply(comics, class)=="factor"]), droplevels ))
+paste("tras el cambio de '' a NA", object.size(comics),"bytes")
 ```
 
 Comprobamos que todas las columnas de tipo factor no tienen ningún nivel que sea cadena de texto vacia:
@@ -187,7 +188,7 @@ year(comics[idx,"FIRST.APPEARANCE.DATE"]) <- comics[idx,"YEAR"]
 
 Vamos a buscar el primer personaje de comic:
 ```{r}
-comics[which.min(comics$FIRST.APPEARANCE.DATE),c("name","ID","SEX","APPEARANCES","FIRST.APPEARANCE.DATE","editorial")]
+comics[which.min(comics$FIRST.APPEARANCE.DATE),c("name","ID","SEX","APPEARANCES","FIRST.APPEARANCE.DATE","editorial","url")]
 ```
 Vamos a descargarnos información adicional de este caracter:
 ```{r}
