@@ -90,7 +90,7 @@ df_activity_work_no_outlier %>% group_by(Activity.Name) %>% summarise(
 ```
 
 
-Vamos a calcular las varianzas de cada uno de los grupos:
+Vamos a calcular las varianzas de cada uno de los grupos: varianzas
 ```{r}
 df_activity_work_no_outlier %>% group_by(Activity.Name) %>% summarise(var(Distance),
                                                                       var(Elapsed.Time),
@@ -184,5 +184,5 @@ with(df_activity_work_no_outlier,
 ```
 Aquí si que se ve una gran diferencia.
 
-
+TODO: Revisar los distintos tipos de test y como funcionan
 
