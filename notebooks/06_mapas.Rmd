@@ -11,11 +11,11 @@ Más info en: https://r-spatial.org/r/2020/03/17/wkt.html
 
 Descargas shp: https://centrodedescargas.cnig.es/CentroDescargas/catalogo.do?Serie=NGBES
 ```{r}
-library(rgdal)
+#library(rgdal)
 library(raster)
 file_name <- '../material_adicional/mapas/recintos_provinciales_inspire_peninbal_etrs89.shp'
-#shp_provincias<-shapefile(file_name, stringsAsFactors=T)
-shp_provincias<-readOGR(file_name,  stringsAsFactors=F)
+shp_provincias<-shapefile(file_name, stringsAsFactors=T)
+#shp_provincias<-readOGR(file_name,  stringsAsFactors=F)
 head(shp_provincias)
 ```
 
@@ -52,8 +52,11 @@ plot(shp_provincias)
 ```{r}
 #Por un tema de licencias para 
 #install.packages("gpclib", type="source")
-paste("Licencia ",maptools::gpclibPermit())
-df_provincias<-broom::tidy(shp_provincias, region="NAMEUNIT")
+#library(maptools)
+#paste("Licencia ",maptools::gpclibPermit())
+#df_provincias<-broom::tidy(shp_provincias, region="NAMEUNIT")
+library(tibble)
+df_provincias<-tibble(shp_provincias, region="NAMEUNIT")
 ```
 
 
@@ -90,7 +93,7 @@ Vamos a bajar información de la elevación de la península y parte de áfrica
 ```{r}
 library(raster)
 library(elevatr)
-library(rgdal)
+#library(rgdal) # deprecado
 
 df_spain<-data.frame(x=c(-10.5,4,4,-10.5),y=c(44.2,44.2,34.3,34.3))
 elev_map <-get_elev_raster(df_spain, prj='EPSG:4326',z=5, src = "aws")
