@@ -206,6 +206,7 @@ img_html <- page_html %>% html_nodes("img")
 
 idx_img <- which(img_html %>% html_attr("class") == "pi-image-thumbnail")
 url_imagen<-html_attr(img_html,"src")[idx_img]
+url_imagen
 ```
 
 Nos podemos descargar la imagen como una matriz de 499x249x3 que represental as tres capas en rojo, verde y azul
@@ -242,6 +243,7 @@ rasterImage(image_matrix_blue, 2*ncol(image_matrix), 1, 3*ncol(image_matrix),nro
 
 Vamos a ver los caracteres que más veces han salido en cada editorial:
 ```{r}
+library(dplyr)
 comics %>% group_by(editorial) %>% slice(which.max(APPEARANCES)) %>% 
   select(name,ID,SEX,APPEARANCES,FIRST.APPEARANCE.DATE,editorial)
 ```
@@ -293,7 +295,7 @@ plot_image(foto_desc$imagen)
 Vamos a ver los 5 caracteres que más veces han salido en cada editorial:
 ```{r}
 comics %>% group_by(editorial) %>% top_n(n=5, wt=APPEARANCES) %>% 
-  select(name,ALIGN,ID,SEX,APPEARANCES,FIRST.APPEARANCE.DATE,YEAR,editorial)
+  select(name,ALIGN,ID,SEX,APPEARANCES,FIRST.APPEARANCE.DATE,YEAR,editorial, url)
 ```
 
 
@@ -330,7 +332,22 @@ Vamos a pintar diferentes variables y ver su relación. Por ejemplo, veamos cuan
 ggplot(comics,aes(x=ALIGN,fill=editorial))+geom_bar(position='dodge')+
    ylab("Número caracteres")+ggtitle("Tipo de caracter")+theme(axis.text.x = element_text(angle = 45, hjust=1))
 ```
+Ejercicio personal: relacion entre editiorial, sexo y gsm
+```{r}  
+library(DataExplorer)
+library(reshape2)
+comics_rev <- comics
+comics_rev[which(comics_rev$SEX == "Agender Characters"),]$SEX = "Genderless Characters"
+# otra forma de hacerlo
+# comics <- comics %>% mutate(SEX = fct_collapse(SEX, 'Agender Characters'=c("Agender Characters","Genderless Characters"))) 
+comics_rev[,c("editorial","SEX","GSM")] %>% filter((!is.na(GSM) | SEX == c("Genderless Characters","Transgender Characters","Agender Characters","Genderfluid Characters"))) -> comics_gsm
+
+# ggplot(comics_gsm,aes(x=SEX)) + geom_bar(aes(fill=editorial), position="dodge") + theme(axis.text.x = element_text(angle = 45, hjust=1))
+table(comics_gsm[,c("editorial","SEX","GSM")])
+```  
+
 ```{r}
+
 DataExplorer::plot_bar(comics[,c("editorial","ALIGN","EYE")])
 ```
 
