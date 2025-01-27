@@ -19,7 +19,8 @@ y a asignar la formato fecha a la columna Acticity.Date y a convertir Elapsed.Ti
 Dos formas de hacerlo, con R-base:
 ```{r}
 df_activity<-df_activity_raw[,c('Activity.Date','Activity.Name','Activity.Type','Elapsed.Time','Distance','Max.Speed','Elevation.Gain','Elevation.Low')]
-Sys.setlocale("LC_TIME", "C")
+#Sys.setlocale("LC_TIME", "C")
+source("Function.R", encoding="utf-8")
 df_activity$Activity.Date<- as.POSIXct(df_activity$Activity.Date,tz="CET",format='%B %d, %Y, %I:%M:%S %p')
 df_activity$Elapsed.Time <- df_activity$Elapsed.Time/60
 df_activity$Dia.Semana <- as.factor(weekdays(df_activity$Activity.Date))
