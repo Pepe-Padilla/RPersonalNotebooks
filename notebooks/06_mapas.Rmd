@@ -15,7 +15,7 @@ Descargas shp: https://centrodedescargas.cnig.es/CentroDescargas/catalogo.do?Ser
 library(raster)
 file_name <- '../material_adicional/mapas/recintos_provinciales_inspire_peninbal_etrs89.shp'
 shp_provincias<-shapefile(file_name, stringsAsFactors=T)
-#shp_provincias<-readOGR(file_name,  stringsAsFactors=F)
+shp_provincias_2<-readOGR(file_name,  stringsAsFactors=F)
 head(shp_provincias)
 ```
 
